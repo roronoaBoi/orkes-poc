@@ -1,7 +1,7 @@
 
 # Data processing example
 
-This example worker processes data from a hypothetical event containing data from a SaaS application.
+This example worker processes data from a hypothetical event containing data from a SaaS application. Note that this example uses the development environment and the `TOKEN` should be put into this script as an environment variable.
 
 ## Orchestration Process
 
@@ -15,7 +15,7 @@ D-.type 1.->
 E[t1 sub routines]
 D-.type 2.->
 F[t2 sub routines]
-G([write to db])
+G[(write to db)]
 E-->G
 F-->G;
 ```
