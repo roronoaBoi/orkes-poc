@@ -1,0 +1,69 @@
+{
+    "createTime": 1733515915331,
+    "updateTime": 1733524258932,
+    "name": "ro_hook_test",
+    "description": "webhook triggered flows",
+    "version": 1,
+    "tasks": [
+      {
+        "name": "apiCall",
+        "taskReferenceName": "apiCallph",
+        "inputParameters": {
+          "http_request": {
+            "uri": "https://orkes-api-tester.orkesconductor.com/api",
+            "method": "GET",
+            "connectionTimeOut": 3000,
+            "readTimeOut": 3000,
+            "accept": "application/json",
+            "contentType": "application/json"
+          }
+        },
+        "type": "HTTP",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "onStateChange": {},
+        "permissive": false
+      },
+      {
+        "name": "webhook",
+        "taskReferenceName": "webhook_ref",
+        "inputParameters": {
+          "matches": {
+            "$['event']['type']": "${workflow.input.type}"
+          }
+        },
+        "type": "WAIT_FOR_WEBHOOK",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "onStateChange": {},
+        "permissive": false
+      }
+    ],
+    "inputParameters": [],
+    "outputParameters": {
+      "data": "${get_random_fact.output.response.body.fact}"
+    },
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "robylee27@gmail.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {},
+    "enforceSchema": true
+  }

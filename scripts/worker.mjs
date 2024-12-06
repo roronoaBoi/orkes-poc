@@ -2,7 +2,7 @@ import { orkesConductorClient, TaskManager } from "@io-orkes/conductor-javascrip
 
 //functions to process data
 function switchId(input) {
-  return input === 1 ? "Type 1" : "Type 2";
+  return input === "1" ? "Type 1" : "Type 2";
 }
 
 function passStatus(score) {

@@ -1,0 +1,158 @@
+{
+  "createTime": 1733521600129,
+  "updateTime": 1733522506551,
+  "name": "Triggered Form",
+  "description": "Processes Data from Form",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "human",
+      "taskReferenceName": "human_ref",
+      "inputParameters": {
+        "__humanTaskDefinition": {
+          "assignmentCompletionStrategy": "LEAVE_OPEN",
+          "assignments": [],
+          "userFormTemplate": {
+            "name": "new_template_vp6u",
+            "version": 1
+          },
+          "displayName": "Form_submission"
+        },
+        "field_enum_uvd5hc6c1": "",
+        "field_number_0rztklei6": ""
+      },
+      "type": "HUMAN",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "proc_data",
+      "taskReferenceName": "worker_code",
+      "inputParameters": {
+        "id": "rec1234",
+        "type_id": "${human_ref.output.field_enum_uvd5hc6c1}",
+        "score": "${human_ref.output.field_number_0rztklei6}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "switch",
+      "taskReferenceName": "switch_ref",
+      "inputParameters": {
+        "switchCaseValue": "${worker_code.output.detail.type_label}"
+      },
+      "type": "SWITCH",
+      "decisionCases": {
+        "Type 1": [
+          {
+            "name": "inline",
+            "taskReferenceName": "inline_ref",
+            "inputParameters": {
+              "expression": "(function () {\n  console.log('type 1 subroutines...')\n})();",
+              "evaluatorType": "graaljs"
+            },
+            "type": "INLINE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          }
+        ],
+        "Type 2": [
+          {
+            "name": "inline_1",
+            "taskReferenceName": "inline_ref_1",
+            "inputParameters": {
+              "expression": "(function () {\n  console.log('type 2 subroutines...')\n})();",
+              "evaluatorType": "graaljs",
+              "value1": 1,
+              "value2": 2
+            },
+            "type": "INLINE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          }
+        ]
+      },
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "evaluatorType": "value-param",
+      "expression": "switchCaseValue",
+      "onStateChange": {},
+      "permissive": false
+    },
+    {
+      "name": "write_to_db",
+      "taskReferenceName": "db_upsert",
+      "inputParameters": {
+        "dataKey": "dataValue"
+      },
+      "type": "SET_VARIABLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {},
+      "permissive": false
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "failureWorkflow": "",
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "robylee27@gmail.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {},
+  "enforceSchema": true
+}
