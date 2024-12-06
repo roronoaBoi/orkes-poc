@@ -1,0 +1,40 @@
+{
+    "createTime": 1733520592273,
+    "updateTime": 1733520592273,
+    "createdBy": "USER:robylee27@gmail.com",
+    "updatedBy": "USER:robylee27@gmail.com",
+    "name": "new_template_vp6u",
+    "version": 1,
+    "jsonSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema",
+      "properties": {
+        "field_enum_uvd5hc6c1": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ]
+        },
+        "field_number_0rztklei6": {
+          "type": "integer"
+        }
+      }
+    },
+    "templateUI": {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/field_enum_uvd5hc6c1",
+          "label": "Submission Type",
+          "options": {}
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/field_number_0rztklei6",
+          "label": "Score",
+          "options": {}
+        }
+      ]
+    }
+  }
