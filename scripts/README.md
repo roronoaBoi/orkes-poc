@@ -1,9 +1,21 @@
 
-# Data processing example
+# Orkes Platform Orchestration Demo
 
-This example of orchestration leverages several of Orkes native features, including Webhooks, User Forms, Worker Tasks, Switches and Inline Tasks. Note that this example uses the development environment and the `TOKEN` should be put into this script as an environment variable.
+This example demonstrates orchestration using several native features of the Orkes platform, including Webhooks, User Forms, Worker Tasks, Switches, and Inline Tasks.
 
-This workflow consists of two parts: the trigger function (`webhook`) and the `main workflow` that procs after a user form submission. Reference the `orkes_json` folder for JSON examples of all of the elements in this example.
+## Key Notes
+
+- This example leverages the Orkes development environment.
+- Ensure that the `TOKEN` is securely stored as an environment variable when running the script.
+
+## Workflow Overview
+
+The orchestration is divided into two main parts:
+
+1. Trigger Function: Initiates via a webhook.
+2. Main Workflow: Executes after a user form submission.
+
+For detailed examples of the JSON configuration files for each workflow element, refer to the `orkes_json` folder in this repository.
 
 ## Orchestration Process Overview
 
@@ -26,7 +38,10 @@ F-->G;
 
 ## Webhook
 
-The webhook in this example follows Orkes documentation and is set up with a simple match. Referece [Orkes Webhook documentation](https://orkes.io/content/templates/examples/custom-conductor-webhook-using-curl) for details. Whether submitting this test via a terminal or a client like Postman, ensure that the JSON matches the workflow input during testing.
+The webhook in this example is configured using Orkes' documentation and employs a simple match pattern. For more details, refer to the [Orkes Webhook documentation](https://orkes.io/content/templates/examples/custom-conductor-webhook-using-curl). 
+
+### Testing the Webhook
+You can test the webhook using a terminal or a client like Postman. Ensure that the JSON payload matches the expected workflow input defined in your configuration. Verify the webhook URL and the authentication token before testing.
 
 Example workflow input params:
 ```json
@@ -45,7 +60,8 @@ Matching body in API call:
 ```
 
 ## Main Workflow
-The main workflow that is triggered from the webhook creates a form for a user. The workflow waits for the response from the user form. Once the user completes the form, the form data is passed into a worker that creates a JSON payload of record detail.
+
+The main workflow triggered by the webhook generates a user form and waits for the user’s response. Once the form is completed, the submitted data is passed to a worker, which processes it to create a JSON payload containing the record details.
 
 Main payload function in worker:
 ```js
@@ -60,7 +76,7 @@ function createPayload(input, score, type) {
 }
 ```
 
-Based on the results from the payload, different steps of a workflow can be initiated. In this example, simple inline JavaScript functions are called to log a simple message:
+Based on the payload results, different workflow steps can be triggered. In this example, simple inline JavaScript functions log a message.
 ```js
 (function () {
     console.log(`${type_label} subroutines...`)
