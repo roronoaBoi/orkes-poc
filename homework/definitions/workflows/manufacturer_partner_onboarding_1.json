@@ -1,0 +1,623 @@
+{
+    "createTime": 1736955604488,
+    "updateTime": 1736964712837,
+    "name": "manufacturer_partner_onboarding_1",
+    "description": "Partner Onboarding Validation",
+    "version": 1,
+    "tasks": [
+      {
+        "name": "fetchPartnerObForm",
+        "taskReferenceName": "fetchPartnerObForm_ref",
+        "inputParameters": {
+          "uri": "https://orkes-api-tester.orkesconductor.com/api",
+          "method": "GET",
+          "accept": "application/json",
+          "contentType": "application/json",
+          "encode": true,
+          "body": {
+            "company": "${workflow.input.company}",
+            "first": "${workflow.input.firstName}",
+            "last": "${workflow.input.lastName}",
+            "email": "${workflow.input.email}",
+            "phone": "${workflow.input.phone}",
+            "taxId": "${workflow.input.taxId}",
+            "w9url": "${workflow.input.w9FormDownloadUrl}",
+            "ccurl": "${workflow.input.complianceCertDownloadUrl}"
+          }
+        },
+        "type": "HTTP",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "onStateChange": {},
+        "permissive": false
+      },
+      {
+        "name": "verifyEmail",
+        "taskReferenceName": "verifyEmail_ref",
+        "inputParameters": {
+          "expression": "//IRL this validation would be built into the form prior to submission, but for demo purposes, it's an inline function for dynamic testing.\n(function () {\n  if ($.email && $.email.includes('@') && $.email.includes('.')) {\n    return $.email;\n  } else {\n    return \"Invalid email format\"\n  }\n})();\n",
+          "evaluatorType": "graaljs",
+          "email": "${workflow.input.email}"
+        },
+        "type": "INLINE",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "onStateChange": {},
+        "permissive": false
+      },
+      {
+        "name": "emailValidation",
+        "taskReferenceName": "emailValidation_ref",
+        "inputParameters": {
+          "switchCaseValue": "${verifyEmail_ref.output.result}"
+        },
+        "type": "SWITCH",
+        "decisionCases": {
+          "Invalid email format": [
+            {
+              "name": "adminMailService",
+              "taskReferenceName": "adminMailService_ref",
+              "inputParameters": {
+                "uri": "https://orkes-api-tester.orkesconductor.com/api",
+                "method": "POST",
+                "accept": "application/json",
+                "contentType": "application/json",
+                "encode": true,
+                "body": {
+                  "company": "${workflow.input.company}",
+                  "first": "${workflow.input.firstName}",
+                  "last": "${workflow.input.lastName}",
+                  "email": "${workflow.input.email}",
+                  "phone": "${workflow.input.phone}",
+                  "taxId": "${workflow.input.taxId}",
+                  "w9url": "${workflow.input.w9FormDownloadUrl}",
+                  "ccurl": "${workflow.input.complianceCertDownloadUrl}",
+                  "message": "Body of the email to the mail service...",
+                  "Subject": "Invalid Email: ${workflow.input.company}"
+                }
+              },
+              "type": "HTTP",
+              "decisionCases": {},
+              "defaultCase": [],
+              "forkTasks": [],
+              "startDelay": 0,
+              "joinOn": [],
+              "optional": false,
+              "defaultExclusiveJoinTask": [],
+              "asyncComplete": false,
+              "loopOver": [],
+              "onStateChange": {},
+              "permissive": false
+            },
+            {
+              "name": "resubmissionCheck",
+              "taskReferenceName": "resubmissionCheck_ref",
+              "inputParameters": {
+                "__humanTaskDefinition": {
+                  "assignmentCompletionStrategy": "LEAVE_OPEN",
+                  "assignments": [
+                    {
+                      "assignee": {
+                        "userType": "CONDUCTOR_USER",
+                        "user": "${workflow.env.assignedUser}"
+                      },
+                      "slaMinutes": 120
+                    }
+                  ],
+                  "userFormTemplate": {
+                    "name": "inputValidationReview",
+                    "version": 1
+                  },
+                  "taskTriggers": []
+                },
+                "vFirstName": "${workflow.input.firstName}",
+                "vLastName": "${workflow.input.lastName}",
+                "vEmail": "${workflow.input.email}",
+                "vPhone": "${workflow.input.phone}",
+                "vCompany": "${workflow.input.company}",
+                "vTaxId": "${workflow.input.taxId}",
+                "vW9Url": "${workflow.input.w9FormDownloadUrl}",
+                "vCcUrl": "${workflow.input.complianceCertDownloadUrl}",
+                "vResubmit": ""
+              },
+              "type": "HUMAN",
+              "decisionCases": {},
+              "defaultCase": [],
+              "forkTasks": [],
+              "startDelay": 0,
+              "joinOn": [],
+              "optional": false,
+              "defaultExclusiveJoinTask": [],
+              "asyncComplete": false,
+              "loopOver": [],
+              "onStateChange": {},
+              "permissive": false
+            },
+            {
+              "name": "switch",
+              "taskReferenceName": "switch_ref",
+              "inputParameters": {
+                "switchCaseValue": "${resubmissionCheck_ref.output.vResubmit}"
+              },
+              "type": "SWITCH",
+              "decisionCases": {
+                "No": [
+                  {
+                    "name": "terminate_validation_failure",
+                    "taskReferenceName": "terminate_validation_failure_ref",
+                    "inputParameters": {
+                      "terminationStatus": "COMPLETED",
+                      "terminationReason": "Initial submission was invalid"
+                    },
+                    "type": "TERMINATE",
+                    "decisionCases": {},
+                    "defaultCase": [],
+                    "forkTasks": [],
+                    "startDelay": 0,
+                    "joinOn": [],
+                    "optional": false,
+                    "defaultExclusiveJoinTask": [],
+                    "asyncComplete": false,
+                    "loopOver": [],
+                    "onStateChange": {},
+                    "permissive": false
+                  }
+                ]
+              },
+              "defaultCase": [
+                {
+                  "name": "Restart Workflow",
+                  "taskReferenceName": "Restart Workflow_ref",
+                  "inputParameters": {
+                    "startWorkflow": {
+                      "name": "manufacturer_partner_onboarding_1",
+                      "input": {
+                        "firstName": "${resubmissionCheck_ref.output.vFirstName}",
+                        "lastName": "${resubmissionCheck_ref.output.vLastName}",
+                        "email": "${resubmissionCheck_ref.output.vEmail}",
+                        "phone": "${resubmissionCheck_ref.output.vPhone}",
+                        "taxId": "${resubmissionCheck_ref.output.vTaxId}",
+                        "w9FormDownloadUrl": "${resubmissionCheck_ref.output.vW9Url}",
+                        "complianceCertDownloadUrl": "${resubmissionCheck_ref.output.vCcUrl}",
+                        "company": "${resubmissionCheck_ref.output.vCompany}"
+                      },
+                      "version": 1
+                    }
+                  },
+                  "type": "START_WORKFLOW",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                }
+              ],
+              "forkTasks": [],
+              "startDelay": 0,
+              "joinOn": [],
+              "optional": false,
+              "defaultExclusiveJoinTask": [],
+              "asyncComplete": false,
+              "loopOver": [],
+              "evaluatorType": "value-param",
+              "expression": "switchCaseValue",
+              "onStateChange": {},
+              "permissive": false
+            },
+            {
+              "name": "terminate_resubmission_complete",
+              "taskReferenceName": "terminate_resubmission_complete_ref",
+              "inputParameters": {
+                "terminationStatus": "COMPLETED",
+                "terminationReason": "Input corrected and resubmitted"
+              },
+              "type": "TERMINATE",
+              "decisionCases": {},
+              "defaultCase": [],
+              "forkTasks": [],
+              "startDelay": 0,
+              "joinOn": [],
+              "optional": false,
+              "defaultExclusiveJoinTask": [],
+              "asyncComplete": false,
+              "loopOver": [],
+              "onStateChange": {},
+              "permissive": false
+            }
+          ]
+        },
+        "defaultCase": [
+          {
+            "name": "partnerMailService:Initial",
+            "taskReferenceName": "partnerMailService:Initial_ref",
+            "inputParameters": {
+              "uri": "https://orkes-api-tester.orkesconductor.com/api",
+              "method": "POST",
+              "accept": "application/json",
+              "contentType": "application/json",
+              "encode": true,
+              "body": {
+                "email": "${workflow.input.email}",
+                "subject": "Partnership Registration Recieved!",
+                "body": "Hello ${workflow.input.firstName},\n\nThank you for submitting your registration. We are processing it quickly and will keep you updated on the process.\n\nRegards,\nRo & Co"
+              }
+            },
+            "type": "HTTP",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          },
+          {
+            "name": "fork",
+            "taskReferenceName": "fork_ref",
+            "inputParameters": {},
+            "type": "FORK_JOIN",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [
+              [
+                {
+                  "name": "fetchCC&LandBinContent",
+                  "taskReferenceName": "fetchCC&LandBinContent_ref",
+                  "inputParameters": {
+                    "uri": "https://httpbin.org/status/200",
+                    "method": "GET",
+                    "accept": "application/json",
+                    "contentType": "application/json",
+                    "encode": true
+                  },
+                  "type": "HTTP",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                },
+                {
+                  "name": "Compliance Cert Approval",
+                  "taskReferenceName": "Compliance Cert Approval_ref",
+                  "inputParameters": {
+                    "__humanTaskDefinition": {
+                      "assignmentCompletionStrategy": "LEAVE_OPEN",
+                      "assignments": [
+                        {
+                          "assignee": {
+                            "userType": "CONDUCTOR_USER",
+                            "user": "${workflow.env.assignedUser}"
+                          },
+                          "slaMinutes": 123
+                        },
+                        {
+                          "assignee": {
+                            "user": "${workflow.env.assignedUser}",
+                            "userType": "CONDUCTOR_USER"
+                          },
+                          "slaMinutes": 345
+                        }
+                      ],
+                      "displayName": "Comp Cert Phase 1",
+                      "userFormTemplate": {
+                        "name": "complianceCertApproval",
+                        "version": 1
+                      },
+                      "taskTriggers": []
+                    },
+                    "parterType": "",
+                    "pFirstName": "${workflow.input.firstName}",
+                    "pLastName": "${workflow.input.lastName}",
+                    "taxId": "${workflow.input.taxId}",
+                    "pCompany": "${workflow.input.company}",
+                    "complianceExp": "",
+                    "ccDownloadUrl": "${workflow.input.complianceCertDownloadUrl}"
+                  },
+                  "type": "HUMAN",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                },
+                {
+                  "name": "mailerService_cc",
+                  "taskReferenceName": "mailerService_cc_ref",
+                  "inputParameters": {
+                    "uri": "https://orkes-api-tester.orkesconductor.com/api",
+                    "method": "POST",
+                    "accept": "application/json",
+                    "contentType": "application/json",
+                    "encode": true,
+                    "body": {
+                      "first": "${workflow.input.firstName}",
+                      "email": "${workflow.input.email}",
+                      "subject": "Compliance Documents Approved",
+                      "body": "Hello ${workflow.input.firstName},\n\nThis message is to inform you that your Compliance Certification has been approved.\n\nThanks!\nRo & Co."
+                    }
+                  },
+                  "type": "HTTP",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                }
+              ],
+              [
+                {
+                  "name": "fetchW9&LandBinContent",
+                  "taskReferenceName": "fetchW9&LandBinContent_ref",
+                  "inputParameters": {
+                    "uri": "https://httpbin.org/status/200",
+                    "method": "GET",
+                    "accept": "application/json",
+                    "contentType": "application/json",
+                    "encode": true
+                  },
+                  "type": "HTTP",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                },
+                {
+                  "name": "W9Approval",
+                  "taskReferenceName": "W9Approval_ref",
+                  "inputParameters": {
+                    "__humanTaskDefinition": {
+                      "assignmentCompletionStrategy": "LEAVE_OPEN",
+                      "assignments": [
+                        {
+                          "assignee": {
+                            "userType": "CONDUCTOR_USER",
+                            "user": "${workflow.env.assignedUser}"
+                          },
+                          "slaMinutes": 120
+                        },
+                        {
+                          "assignee": {
+                            "userType": "CONDUCTOR_USER",
+                            "user": "${workflow.env.assignedUser}"
+                          },
+                          "slaMinutes": 230
+                        }
+                      ],
+                      "displayName": "W9 Approval",
+                      "userFormTemplate": {
+                        "name": "w9Review",
+                        "version": 1
+                      },
+                      "taskTriggers": []
+                    },
+                    "pFirstName": "${workflow.input.firstName}",
+                    "pLastName": "${workflow.input.lastName}",
+                    "W9Approval": "",
+                    "dateReview": "",
+                    "w9downloadUrl": "${workflow.input.w9FormDownloadUrl}"
+                  },
+                  "type": "HUMAN",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                },
+                {
+                  "name": "mailerService_w9",
+                  "taskReferenceName": "mailerService_w9_ref",
+                  "inputParameters": {
+                    "uri": "https://orkes-api-tester.orkesconductor.com/api",
+                    "method": "POST",
+                    "accept": "application/json",
+                    "contentType": "application/json",
+                    "encode": true,
+                    "body": {
+                      "first": "${workflow.input.firstName}",
+                      "email": "${workflow.input.email}",
+                      "subject": "W9 Approved",
+                      "body": "Hello ${workflow.input.firstName},\n\nThis message is to inform you that your W9 has been approved.\n\nThanks!\nRo & Co."
+                    }
+                  },
+                  "type": "HTTP",
+                  "decisionCases": {},
+                  "defaultCase": [],
+                  "forkTasks": [],
+                  "startDelay": 0,
+                  "joinOn": [],
+                  "optional": false,
+                  "defaultExclusiveJoinTask": [],
+                  "asyncComplete": false,
+                  "loopOver": [],
+                  "onStateChange": {},
+                  "permissive": false
+                }
+              ],
+              []
+            ],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          },
+          {
+            "name": "join",
+            "taskReferenceName": "join_ref",
+            "inputParameters": {},
+            "type": "JOIN",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [
+              "Compliance Cert Approval_ref",
+              "W9Approval_ref"
+            ],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          },
+          {
+            "name": "partnerMailService:DocConfirmation",
+            "taskReferenceName": "partnerMailService:DocConfirmation_ref",
+            "inputParameters": {
+              "uri": "https://orkes-api-tester.orkesconductor.com/api",
+              "method": "POST",
+              "accept": "application/json",
+              "contentType": "application/json",
+              "encode": true,
+              "body": {
+                "email": "${workflow.input.email}",
+                "subject": "Documents Confirmed",
+                "body": "Hello ${workflow.input.firstName},\nWe just confirmed your documents. Stand by for further steps.\n\nThank you.\n\nRo & Co"
+              }
+            },
+            "type": "HTTP",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          }
+        ],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "evaluatorType": "value-param",
+        "expression": "switchCaseValue",
+        "onStateChange": {},
+        "permissive": false
+      },
+      {
+        "name": "start_workflow",
+        "taskReferenceName": "start_workflow_ref",
+        "inputParameters": {
+          "startWorkflow": {
+            "name": "manufacturer_partner_onboarding_2",
+            "input": {
+              "pCompany": "${workflow.input.company}",
+              "pFirstName": "${workflow.input.firstName}",
+              "pLastName": "${workflow.input.lastName}",
+              "w9Approved": "${workflow.input.taxId}",
+              "ccApproved": "${workflow.input.w9FormDownloadUrl}",
+              "pendingForm": "roco.sharepoint.com/sites/${workflow.input.company}"
+            },
+            "version": 1
+          }
+        },
+        "type": "START_WORKFLOW",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "onStateChange": {},
+        "permissive": false
+      }
+    ],
+    "inputParameters": [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "taxId",
+      "w9FormDownloadUrl",
+      "complianceCertDownloadUrl",
+      "company"
+    ],
+    "outputParameters": {},
+    "failureWorkflow": "",
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "robylee27@gmail.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {},
+    "inputSchema": {
+      "createTime": 0,
+      "updateTime": 0,
+      "name": "okres-prtnr-reg",
+      "version": 1,
+      "type": "JSON"
+    },
+    "enforceSchema": true
+  }
