@@ -1,0 +1,121 @@
+{
+    "createTime": 1736955740308,
+    "updateTime": 1736964487045,
+    "name": "manufacturer_partner_onboarding_2",
+    "description": "Partner Onboarding Final Approval",
+    "version": 1,
+    "tasks": [
+      {
+        "name": "finalPartnerApproval",
+        "taskReferenceName": "finalPartnerApproval_ref",
+        "inputParameters": {
+          "__humanTaskDefinition": {
+            "assignmentCompletionStrategy": "LEAVE_OPEN",
+            "assignments": [
+              {
+                "assignee": {
+                  "user": "${workflow.env.assignedUser}",
+                  "userType": "CONDUCTOR_USER"
+                },
+                "slaMinutes": 300
+              }
+            ],
+            "userFormTemplate": {
+              "name": "finalPartnerReview",
+              "version": 1
+            },
+            "displayName": "Final Partner Approval"
+          },
+          "pFirstName": "${workflow.input.pFirstName}",
+          "pLastName": "${workflow.input.pLastName}",
+          "pCompany": "${workflow.input.pCompany}",
+          "w9Approved": "Yes",
+          "ccApproved": "Yes",
+          "pendingForm": "${workflow.input.pendingForm}",
+          "approval": ""
+        },
+        "type": "HUMAN",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "onStateChange": {},
+        "permissive": false
+      },
+      {
+        "name": "switch",
+        "taskReferenceName": "switch_ref",
+        "inputParameters": {
+          "switchCaseValue": "${finalPartnerApproval_ref.output.approval}"
+        },
+        "type": "SWITCH",
+        "decisionCases": {
+          "No": []
+        },
+        "defaultCase": [
+          {
+            "name": "mailerService",
+            "taskReferenceName": "mailerService_ref",
+            "inputParameters": {
+              "uri": "https://orkes-api-tester.orkesconductor.com/api",
+              "method": "POST",
+              "accept": "application/json",
+              "contentType": "application/json",
+              "encode": true,
+              "headers": {},
+              "body": {
+                "email": "${workflow.input.email}",
+                "subject": "${workflow.input.company}, welcome to Ro & Co!",
+                "body": "Thank you for your partnership, ${workflow.input.firstName}.\n\nPlease click the link below to navigate to the partner portal:\nhttps://google.com\n\nWe look forward to working with you!"
+              }
+            },
+            "type": "HTTP",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {},
+            "permissive": false
+          }
+        ],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": [],
+        "evaluatorType": "value-param",
+        "expression": "switchCaseValue",
+        "onStateChange": {},
+        "permissive": false
+      }
+    ],
+    "inputParameters": [
+      "pFirstName",
+      "pLastName",
+      "pCompany",
+      "pendingForm"
+    ],
+    "outputParameters": {},
+    "failureWorkflow": "",
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "robylee27@gmail.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {},
+    "enforceSchema": true
+  }

@@ -1,0 +1,89 @@
+{
+    "createTime": 1736964241398,
+    "updateTime": 1736964241398,
+    "createdBy": "USER:robylee27@gmail.com",
+    "updatedBy": "USER:robylee27@gmail.com",
+    "name": "complianceCertApproval",
+    "version": 1,
+    "jsonSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema",
+      "properties": {
+        "parterType": {
+          "type": "string",
+          "enum": [
+            "Contractor",
+            "Supplier",
+            "Franchisee"
+          ]
+        },
+        "pFirstName": {
+          "type": "string"
+        },
+        "pLastName": {
+          "type": "string"
+        },
+        "taxId": {
+          "type": "string"
+        },
+        "pCompany": {
+          "type": "string"
+        },
+        "complianceExp": {
+          "type": "string",
+          "format": "date"
+        },
+        "ccDownloadUrl": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "parterType",
+        "taxId",
+        "complianceExp"
+      ]
+    },
+    "templateUI": {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/parterType",
+          "label": "Partner Type",
+          "options": {
+            "format": "radio"
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pFirstName",
+          "label": "First Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pLastName",
+          "label": "Last Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/taxId",
+          "label": "Tax ID"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pCompany",
+          "label": "Company"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/complianceExp",
+          "label": "Compliance Expiration Date",
+          "options": {}
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ccDownloadUrl",
+          "label": "Compliance Certificate Attachments"
+        }
+      ]
+    }
+  }

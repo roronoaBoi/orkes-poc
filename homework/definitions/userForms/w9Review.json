@@ -1,0 +1,73 @@
+{
+    "createTime": 1736964206620,
+    "updateTime": 1736964206620,
+    "createdBy": "USER:robylee27@gmail.com",
+    "updatedBy": "USER:robylee27@gmail.com",
+    "name": "w9Review",
+    "version": 1,
+    "jsonSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema",
+      "properties": {
+        "pFirstName": {
+          "type": "string"
+        },
+        "pLastName": {
+          "type": "string"
+        },
+        "W9Approval": {
+          "type": "string",
+          "enum": [
+            "Yes",
+            "No"
+          ]
+        },
+        "dateReview": {
+          "type": "string",
+          "format": "date"
+        },
+        "w9downloadUrl": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "pFirstName",
+        "pLastName",
+        "W9Approval",
+        "dateReview"
+      ]
+    },
+    "templateUI": {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/pFirstName",
+          "label": "First Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pLastName",
+          "label": "Last Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/W9Approval",
+          "label": "Is W9 uploaded into Workday Partner Module? ",
+          "options": {
+            "format": "radio"
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dateReview",
+          "label": "Date of Review",
+          "options": {}
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/w9downloadUrl",
+          "label": "w9 Attachment"
+        }
+      ]
+    }
+  }

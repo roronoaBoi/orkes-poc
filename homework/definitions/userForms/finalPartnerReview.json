@@ -1,0 +1,95 @@
+{
+    "createTime": 1736964147920,
+    "updateTime": 1736964147920,
+    "createdBy": "USER:robylee27@gmail.com",
+    "updatedBy": "USER:robylee27@gmail.com",
+    "name": "finalPartnerReview",
+    "version": 1,
+    "jsonSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema",
+      "properties": {
+        "pFirstName": {
+          "type": "string"
+        },
+        "pLastName": {
+          "type": "string"
+        },
+        "pCompany": {
+          "type": "string"
+        },
+        "w9Approved": {
+          "type": "string",
+          "enum": [
+            "Yes",
+            "No"
+          ]
+        },
+        "ccApproved": {
+          "type": "string",
+          "enum": [
+            "Yes",
+            "No"
+          ]
+        },
+        "pendingForm": {
+          "type": "string"
+        },
+        "approval": {
+          "type": "string",
+          "enum": [
+            "Yes",
+            "No"
+          ]
+        }
+      }
+    },
+    "templateUI": {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/pFirstName",
+          "label": "First Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pLastName",
+          "label": "Last Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pCompany",
+          "label": "Company"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/w9Approved",
+          "label": "W9 Approved",
+          "options": {
+            "format": "radio"
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ccApproved",
+          "label": "Compliance Certificates Approved",
+          "options": {
+            "format": "radio"
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/pendingForm",
+          "label": "Form URL"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/approval",
+          "label": "Approve and create partner in SAP?",
+          "options": {
+            "format": "radio"
+          }
+        }
+      ]
+    }
+  }

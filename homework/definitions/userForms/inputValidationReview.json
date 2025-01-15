@@ -1,0 +1,97 @@
+{
+    "createTime": 1736959566935,
+    "updateTime": 1736961205300,
+    "createdBy": "USER:robylee27@gmail.com",
+    "updatedBy": "USER:robylee27@gmail.com",
+    "name": "inputValidationReview",
+    "version": 1,
+    "jsonSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema",
+      "properties": {
+        "vFirstName": {
+          "type": "string"
+        },
+        "vLastName": {
+          "type": "string"
+        },
+        "vEmail": {
+          "type": "string"
+        },
+        "vPhone": {
+          "type": "string"
+        },
+        "vCompany": {
+          "type": "string"
+        },
+        "vTaxId": {
+          "type": "string"
+        },
+        "vW9Url": {
+          "type": "string"
+        },
+        "vCcUrl": {
+          "type": "string"
+        },
+        "vResubmit": {
+          "type": "string",
+          "enum": [
+            "Yes",
+            "No"
+          ]
+        }
+      }
+    },
+    "templateUI": {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/vFirstName",
+          "label": "First Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vLastName",
+          "label": "Last Name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vEmail",
+          "label": "Email"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vPhone",
+          "label": "Phone"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vCompany",
+          "label": "Company"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vTaxId",
+          "label": "Tax ID"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vW9Url",
+          "label": "W9 Attachment"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vCcUrl",
+          "label": "Compliance Certifications Attachments"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/vResubmit",
+          "label": "Approved for Resubmission?",
+          "options": {
+            "format": "radio"
+          }
+        }
+      ]
+    }
+  }
