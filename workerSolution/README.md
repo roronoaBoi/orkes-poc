@@ -5,13 +5,23 @@ This example demonstrates orchestration using several native features of the Ork
 
 ## Set Up
 
-Ensure that the `TOKEN` is securely stored as an environment variable in the directory of the script when executing the script.
+Create a `.env` file in the `workerSolution` directory, and add a `TOKEN` parameter.
 
 ```bash
 TOKEN=5b1d73376dhy2a92960a0171b...
 ```
 
-Additionally, ensure all dependencies are installed by running `npm i` in the directory of `worker.mjs`
+Ensure all dependencies are installed by running `npm i` in your terminal.
+
+## Using the Demo
+
+Once the set up is complete, run the following command in the `workerSolution` directory:
+
+```bash
+node worker.mjs
+```
+
+This will ensure the worker is listening for testing the workflow in the Orkes Conductor developer environment.
 
 ## Workflow Overview
 

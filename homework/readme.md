@@ -4,11 +4,14 @@ This repository contains a demo showcasing an automated partner onboarding workf
 
 ## Set Up
 
-To set up this demo in your Orkes Demo environment, create definitions for the respective `userForms` and `workflows` located in this directory.
+- Create definitions for the respective `userForms` and `workflows` located in this directory.
 
-Additionally, create an envioronment variable called `assignedUser`, and set it to your email address. This will be the user that is assigned all human tasks for approval in this demonstration.
+- Create an envioronment variable called `assignedUser`, and set it to your email address. This will be the user that is assigned all human tasks for approval in this demonstration.
 
-Once complete, click Run Workflow and select the workflow named `manufacturer_partner_onboarding_1`. Pass initial form data as follows:
+## Using the Demo
+
+In your Orkes Conductor developer environment, click Run Workflow and select the workflow named `manufacturer_partner_onboarding_1`. Pass initial form data as follows:
+
 ```json
 {
   "firstName": "Thomas",
