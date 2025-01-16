@@ -1,12 +1,17 @@
 
 # Orkes Platform Orchestration Demo
 
-This example demonstrates orchestration using several native features of the Orkes platform, including Webhooks, User Forms, Worker Tasks, Switches, and Inline Tasks.
+This example demonstrates orchestration using several native features of the Orkes platform, including Webhooks, User Forms, Worker Tasks, Switches, and Inline Tasks. This example leverages the Orkes development environment.
 
-## Key Notes
+## Set Up
 
-- This example leverages the Orkes development environment.
-- Ensure that the `TOKEN` is securely stored as an environment variable when running the script.
+Ensure that the `TOKEN` is securely stored as an environment variable in the directory of the script when executing the script.
+
+```bash
+TOKEN=5b1d73376dhy2a92960a0171b...
+```
+
+Additionally, ensure all dependencies are installed by running `npm i` in the directory of `worker.mjs`
 
 ## Workflow Overview
 

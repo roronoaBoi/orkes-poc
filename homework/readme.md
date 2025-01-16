@@ -1,4 +1,4 @@
-# Enterprise Onboarding Usecase
+# Partner Onboarding Usecase
 
 This repository contains a demo showcasing an automated partner onboarding workflow built using the Orkes Conductor platform. Designed for a manufacturing company, this solution addresses the need for a streamlined process to onboard trading partners, ensuring collaboration and integration.
 
