@@ -1,4 +1,8 @@
 import { orkesConductorClient, TaskManager } from "@io-orkes/conductor-javascript";
+import dotenv from 'dotenv'
+dotenv.config()
+
+const token = process.env.TOKEN
 
 //functions to process data
 function switchId(input) {
@@ -23,7 +27,7 @@ function createPayload(input, score, type) {
 async function procData() {
   try {
     const client = await orkesConductorClient({
-      TOKEN: "",
+      TOKEN: token,
       serverUrl: "https://developer.orkescloud.com/api",
     });
 
