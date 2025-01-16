@@ -1,0 +1,18 @@
+{
+  "verifier": "HEADER_BASED",
+  "secretValue": "***",
+  "headers": {
+    "SomeKey5wvjd": "Some-val-704z"
+  },
+  "name": "ro_hook",
+  "id": "6j4r7f7152b5-b3f4-11ef-9ee2-e66ef5be46e1",
+  "receiverWorkflowNamesToVersions": {
+    "triggeredForm": 1
+  },
+  "workflowsToStart": {
+    "triggeredForm": 1
+  },
+  "urlVerified": true,
+  "sourcePlatform": "Custom",
+  "createdBy": "robylee27@gmail.com"
+}

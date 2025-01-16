@@ -16,7 +16,7 @@ function passStatus(score) {
 function createPayload(input, score, type) {
   return {
     id: input.id,
-    type_id: input.type_id,
+    subType: input.subType,
     type_label: type,
     score: input.score,
     failed: score,
@@ -33,11 +33,13 @@ async function procData() {
 
     const customWorker = {
       taskDefName: "proc_data",
-      execute: async ({ inputData: { id, type_id, score }, taskId }) => {
+      execute: async ({ inputData: { id, subType, score }, taskId }) => {
         try {
           const failedStat = passStatus(score);
-          const typeLabel = switchId(type_id);
-          const detail = createPayload({ id, type_id, score }, failedStat, typeLabel);
+          const typeLabel = switchId(subType);
+          const detail = createPayload({ id, subType, score }, failedStat, typeLabel);
+          console.log('payload created!')
+          console.log(detail)
 
           return {
             outputData: { detail },

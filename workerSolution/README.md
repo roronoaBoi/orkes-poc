@@ -1,11 +1,13 @@
 
 # Orkes Platform Orchestration Demo
 
-This example demonstrates orchestration using several native features of the Orkes platform, including Webhooks, User Forms, Worker Tasks, Switches, and Inline Tasks. This example leverages the Orkes development environment.
+This example demonstrates orchestration using several native features of the Orkes platform, including Webhooks, User Forms, Worker Tasks, Switches, and Inline Tasks. This example can be deployed in the the Orkes Conductor development environment.
 
 ## Set Up
 
-Create a `.env` file in the `workerSolution` directory, and add a `TOKEN` parameter.
+- In your Orkes Conductor developer environment, create definitions for the respective `userForms`, `webhooks`, and `workflows` located in this directory.
+
+- Create a `.env` file in the `workerSolution` directory, and add a `TOKEN` parameter. This token can be generated from the Orkes Conductor developer environment.
 
 ```bash
 TOKEN=5b1d73376dhy2a92960a0171b...
@@ -21,16 +23,30 @@ Once the set up is complete, run the following command in the `workerSolution` d
 node worker.mjs
 ```
 
-This will ensure the worker is listening for testing the workflow in the Orkes Conductor developer environment.
+This will ensure the worker is listening for testing the workflow in the Orkes Conductor developer environment. Simple logs have been added to show what the worker does to inputs.
 
-## Workflow Overview
+Make the following API call from Postman, Insomnia, or the REST client of choice:
 
-The orchestration is divided into two main parts:
+```curl
+curl --location 'https://developer.orkescloud.com/webhook/6j4r7f7152b5-b3f4-11ef-9ee2-e66ef5be46e1' \
+--header 'SomeKey5wvjd: Some-val-704z' \
+--header 'Content-Type: application/json' \
+--data '{
+    "event": {
+        "id": "Record 6789",
+        "subType": "2",
+        "score": 23
+    }
+}'
+```
 
-1. Trigger Function: Initiates via a webhook.
-2. Main Workflow: Executes after a user form submission.
+This should be a `POST` call.
 
-For detailed examples of the JSON configuration files for each workflow element, refer to the `orkes_json` folder in this repository.
+The body passed in the payload can have varying data, but `subType` only accepts values `1` or `2`. There are human tasks in place so that the variables can be validated prior to being passed to the worker.
+
+Once the API call is made, a human tasks will be created in the Orkes Conductor developer environment. This will need to be claimed and completed.
+
+After the human task is complete, the worker will process the code and the workflow will complete.
 
 ## Orchestration Process Overview
 
@@ -53,26 +69,7 @@ F-->G;
 
 ## Webhook
 
-The webhook in this example is configured using Orkes' documentation and employs a simple match pattern. For more details, refer to the [Orkes Webhook documentation](https://orkes.io/content/templates/examples/custom-conductor-webhook-using-curl). 
-
-### Testing the Webhook
-You can test the webhook using a terminal or a client like Postman. Ensure that the JSON payload matches the expected workflow input defined in your configuration. Verify the webhook URL and the authentication token before testing.
-
-Example workflow input params:
-```json
-{
-  "type": "submission"
-}
-```
-
-Matching body in API call:
-```json
-{
-    "event": {
-        "type": "submission"
-    }
-}
-```
+The webhook in this example is configured using Orkes' documentation and does not leverage a match pattern. For more details, refer to the [Orkes Webhook documentation](https://orkes.io/content/templates/examples/custom-conductor-webhook-using-curl). 
 
 ## Main Workflow
 
@@ -83,7 +80,7 @@ Main payload function in worker:
 function createPayload(input, score, type) {
   return {
     id: input.id,
-    type_id: input.type_id,
+    subType: input.subType,
     type_label: type,
     score: input.score,
     failed: score,

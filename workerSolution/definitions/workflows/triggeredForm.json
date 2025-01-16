@@ -1,7 +1,7 @@
 {
-  "createTime": 1733521600129,
-  "updateTime": 1733522506551,
-  "name": "Triggered Form",
+  "createTime": 1737047787978,
+  "updateTime": 1737052092517,
+  "name": "triggeredForm",
   "description": "Processes Data from Form",
   "version": 1,
   "tasks": [
@@ -13,13 +13,14 @@
           "assignmentCompletionStrategy": "LEAVE_OPEN",
           "assignments": [],
           "userFormTemplate": {
-            "name": "new_template_vp6u",
+            "name": "workerForm",
             "version": 1
           },
           "displayName": "Form_submission"
         },
-        "field_enum_uvd5hc6c1": "",
-        "field_number_0rztklei6": ""
+        "subType": "${workflow.input.event.subType}",
+        "score": "${workflow.input.event.score}",
+        "id": "${workflow.input.event.id} "
       },
       "type": "HUMAN",
       "decisionCases": {},
@@ -38,9 +39,9 @@
       "name": "proc_data",
       "taskReferenceName": "worker_code",
       "inputParameters": {
-        "id": "rec1234",
-        "type_id": "${human_ref.output.field_enum_uvd5hc6c1}",
-        "score": "${human_ref.output.field_number_0rztklei6}"
+        "id": "${human_ref.output.id}",
+        "subType": "${human_ref.output.subType}",
+        "score": "${human_ref.output.score}"
       },
       "type": "SIMPLE",
       "decisionCases": {},
@@ -110,7 +111,28 @@
           }
         ]
       },
-      "defaultCase": [],
+      "defaultCase": [
+        {
+          "name": "terminate",
+          "taskReferenceName": "terminate_ref",
+          "inputParameters": {
+            "terminationStatus": "COMPLETED",
+            "terminationReason": "Irrelevant Type"
+          },
+          "type": "TERMINATE",
+          "decisionCases": {},
+          "defaultCase": [],
+          "forkTasks": [],
+          "startDelay": 0,
+          "joinOn": [],
+          "optional": false,
+          "defaultExclusiveJoinTask": [],
+          "asyncComplete": false,
+          "loopOver": [],
+          "onStateChange": {},
+          "permissive": false
+        }
+      ],
       "forkTasks": [],
       "startDelay": 0,
       "joinOn": [],
@@ -143,7 +165,11 @@
       "permissive": false
     }
   ],
-  "inputParameters": [],
+  "inputParameters": [
+    "event.subType",
+    "event.score",
+    "event.id"
+  ],
   "outputParameters": {},
   "failureWorkflow": "",
   "schemaVersion": 2,

@@ -1,21 +1,24 @@
 {
-    "createTime": 1733520592273,
-    "updateTime": 1733520592273,
+    "createTime": 1737047288657,
+    "updateTime": 1737051538762,
     "createdBy": "USER:robylee27@gmail.com",
     "updatedBy": "USER:robylee27@gmail.com",
-    "name": "new_template_vp6u",
+    "name": "workerForm",
     "version": 1,
     "jsonSchema": {
       "$schema": "http://json-schema.org/draft-07/schema",
       "properties": {
-        "field_enum_uvd5hc6c1": {
+        "id": {
+          "type": "string"
+        },
+        "subType": {
           "type": "string",
           "enum": [
             "1",
             "2"
           ]
         },
-        "field_number_0rztklei6": {
+        "score": {
           "type": "integer"
         }
       }
@@ -25,13 +28,18 @@
       "elements": [
         {
           "type": "Control",
-          "scope": "#/properties/field_enum_uvd5hc6c1",
+          "scope": "#/properties/id",
+          "label": "Record ID"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/subType",
           "label": "Submission Type",
           "options": {}
         },
         {
           "type": "Control",
-          "scope": "#/properties/field_number_0rztklei6",
+          "scope": "#/properties/score",
           "label": "Score",
           "options": {}
         }
